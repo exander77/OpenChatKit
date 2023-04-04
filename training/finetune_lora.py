@@ -58,7 +58,7 @@ from peft import LoraConfig, get_peft_model
 config = LoraConfig(
     r=16,
     lora_alpha=32,
-    lora_dropout=0.05,
+    lora_dropout=0.01,
     bias="none",
     task_type="CAUSAL_LM"
 )
