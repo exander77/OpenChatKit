@@ -69,7 +69,7 @@ print_trainable_parameters(model)
 import transformers
 from datasets import load_dataset
 
-data = load_dataset("/content/OpenChatKit/data/OIG/files/unified_cuad.jsonl")
+data = load_dataset("/content/OpenChatKit/data/OIG/files")
 data = data.map(lambda samples: tokenizer(samples), batched=True)
 
 trainer = transformers.Trainer(
