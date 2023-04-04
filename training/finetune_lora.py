@@ -85,8 +85,7 @@ trainer = transformers.Trainer(
         learning_rate=2e-4,
         fp16=True,
         logging_steps=1,
-        output_dir='outputs',
-        s
+        output_dir='outputs'
     ),
     data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
 )
