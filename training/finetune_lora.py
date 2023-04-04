@@ -16,6 +16,7 @@ model = AutoModelForCausalLM.from_pretrained(
     model_name,
     load_in_8bit=True,
     device_map='auto',
+    llm_int8_enable_fp32_cpu_offload=True
 )
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -77,10 +78,10 @@ trainer = transformers.Trainer(
     model=model,
     train_dataset=data['train'],
     args=transformers.TrainingArguments(
-        per_device_train_batch_size=4,
+        per_device_train_batch_size=1,
         gradient_accumulation_steps=1,
         warmup_steps=100,
-        max_steps=200,
+        max_steps=600,
         learning_rate=2e-4,
         fp16=True,
         logging_steps=1,
