@@ -2,7 +2,7 @@ import os
 import argparse
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
-from peft import get_peft_model, LoraConfig, TaskType   # pip install loralib
+from peft import get_peft_model, LoraConfig, TaskType, PeftConfig   # pip install loralib peft TODO: clear extras
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -24,9 +24,8 @@ if __name__ == '__main__':
         os.mkdir(save_path)
     
     print('loading model from HF...')
-    peft_config = LoraConfig(
-        task_type="CAUSAL_LM", inference_mode=False, r=16, lora_alpha=32, lora_dropout=0.05, bias="none"
-    )
+    #peft_config = LoraConfig(task_type="CAUSAL_LM", inference_mode=False, r=16, lora_alpha=32, lora_dropout=0.05, bias="none")
+    peft_config = PeftConfig.from_pretrained(args.model_name)
     peft_config.save_pretrained(save_path)
     tokenizer = AutoTokenizer.from_pretrained(args.model_name)
     tokenizer.save_pretrained(save_path)

@@ -16,7 +16,7 @@ from utils.dist_args_utils import *
 from utils.dist_checkpoint_utils import *
 from utils.logging_utils import *
 from comm.comm_utils import *
-
+from peft import PeftModel, PeftConfig
 
 def test_loop(args, pipe, device, test_data_loader):
     
@@ -283,7 +283,8 @@ def main():
         dp_rank = 0
         dp_size = 1
     
-    config = AutoConfig.from_pretrained(args.model_name)
+    #config = AutoConfig.from_pretrained(args.model_name)
+    config = PeftConfig.from_pretrained(args.model_name)
     
     # num layer globally
     if hasattr(config, 'num_hidden_layers'):

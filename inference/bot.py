@@ -63,7 +63,10 @@ class ChatModel:
             self._model.to(device)
         # load the model with the given max_memory config (for devices with insufficient VRAM or multi-gpu)
         else:
-            config = AutoConfig.from_pretrained(model_name)
+            if load_peft:
+                config = PeftConfig.from_pretrained(model_name)
+            else:
+                config = AutoConfig.from_pretrained(model_name)
             # load empty weights
             with init_empty_weights():
                 model_from_conf = AutoModelForCausalLM.from_config(config)
