@@ -70,7 +70,7 @@ import transformers
 from datasets import load_dataset
 
 data = load_dataset("/content/OpenChatKit/data/OIG/files")
-# data = data.map(lambda samples: tokenizer(samples), batched=True)
+data = data.map(lambda samples: tokenizer(samples['text']), batched=True)
 
 trainer = transformers.Trainer(
     model=model,
