@@ -56,7 +56,7 @@ def print_trainable_parameters(model):
 from peft import LoraConfig, get_peft_model
 
 config = LoraConfig(
-    r=16,
+    r=8,
     lora_alpha=32,
     lora_dropout=0.01,
     bias="none",
@@ -77,8 +77,8 @@ trainer = transformers.Trainer(
     model=model,
     train_dataset=data['train'],
     args=transformers.TrainingArguments(
-        per_device_train_batch_size=4,
-        gradient_accumulation_steps=4,
+        per_device_train_batch_size=1,
+        gradient_accumulation_steps=1,
         warmup_steps=100,
         max_steps=200,
         learning_rate=2e-4,
