@@ -2,11 +2,6 @@ import re
 import time
 
 MEANINGLESS_WORDS = ['<pad>', '</s>', '<|endoftext|>']
-PRE_PROMPT = """\
-Current Date: {}
-Current Time: {}
-
-"""
 
 def clean_response(response):
     for word in MEANINGLESS_WORDS:
@@ -15,13 +10,13 @@ def clean_response(response):
     return response
 
 class Conversation:
-    def __init__(self, human_id, bot_id):
+    def __init__(self, human_id, bot_id, pre_prompt):
         cur_date = time.strftime('%Y-%m-%d')
         cur_time = time.strftime('%H:%M:%S %p %Z')
 
         self._human_id = human_id
         self._bot_id = bot_id
-        self._prompt = PRE_PROMPT.format(cur_date, cur_time)
+        self._prompt = pre_prompt.format(cur_date, cur_time)
 
     def push_context_turn(self, context):
         # for now, context is represented as a human turn

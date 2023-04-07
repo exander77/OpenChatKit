@@ -128,7 +128,7 @@ class OpenChatKitShell(cmd.Cmd):
     intro = "Welcome to OpenChatKit shell.   Type /help or /? to list commands.\n"
     prompt = ">>> "
 
-    def __init__(self, gpu_id, model_name_or_path, max_tokens, sample, temperature, top_k, retrieval, max_memory, do_stream, load_in_8bit):
+    def __init__(self, gpu_id, model_name_or_path, max_tokens, sample, temperature, top_k, retrieval, max_memory, do_stream, load_in_8bit, pre_prompt):
         super().__init__()
         self._gpu_id = int(gpu_id)
         self._model_name_or_path = model_name_or_path
@@ -140,6 +140,7 @@ class OpenChatKitShell(cmd.Cmd):
         self._max_memory = max_memory
         self._do_stream = do_stream
         self._load_in_8bit = load_in_8bit
+        self._pre_prompt = pre_prompt
 
     def preloop(self):
         print(f"Loading {self._model_name_or_path} to cuda:{self._gpu_id}...")
@@ -150,7 +151,7 @@ class OpenChatKitShell(cmd.Cmd):
             self._index = wp.WikipediaIndex()
 
         self._convo = convo.Conversation(
-            self._model.human_id, self._model.bot_id)
+            self._model.human_id, self._model.bot_id, self._pre_prompt)
 
     def precmd(self, line):
         if line.startswith('/'):
@@ -166,8 +167,9 @@ class OpenChatKitShell(cmd.Cmd):
 
         self._convo.push_human_turn(arg)
 
+        prompt = self._convo.get_raw_prompt()
         output = self._model.do_inference(
-            self._convo.get_raw_prompt(),
+            prompt,
             self._max_tokens,
             self._sample,
             self._temperature,
@@ -195,7 +197,7 @@ class OpenChatKitShell(cmd.Cmd):
 
     def do_reset(self, arg):
         self._convo = convo.Conversation(
-            self._model.human_id, self._model.bot_id)
+            self._model.human_id, self._model.bot_id, self._pre_prompt)
 
     def do_hyperparameters(self, arg):
         print(
@@ -279,6 +281,11 @@ def main():
         action='store_true',
         help='indicates whether to load model in 8 bit'
     )
+    parser.add_argument(
+        '--pre-prompt',
+        default="Current Date: {}\nCurrent Time: {}\n\n",
+        help='pre prompt'
+    )
     args = parser.parse_args()
 
     # set max_memory dictionary if given
@@ -305,6 +312,7 @@ def main():
         max_memory,
         not args.no_stream,
         args.load_in_8bit,
+        args.pre_prompt,
     ).cmdloop()
 
 
